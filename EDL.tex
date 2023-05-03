@@ -1,0 +1,576 @@
+\documentclass[a4paper,12pt,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[none]{hyphenat}
+\usepackage[justification=centering]{caption}
+\usepackage{subcaption}
+\usepackage{amssymb, amsmath}
+\usepackage{gensymb}
+\usepackage{fancyhdr}
+
+
+\lhead{Ecuaciones diferenciales lineales}
+\rhead{Gonzalo Bastos González}
+
+\pagestyle{fancy}
+
+\title{Ecuaciones diferenciales lineales}
+\author{Gonzalo Bastos González}
+
+\begin{document}
+
+\section{Introducción}
+
+Una ecuación diferencial lineal de orden $n$ tiene la siguiente forma:
+
+\begin{equation}
+    a_n(x) \frac{d^n y}{d x^n}+a_{n-1}(x) \frac{d^{n-1} y}{d x^{n-1}}+\cdots+a_1(x) \frac{d y}{d x}+a_0(x) y=f(x)
+\end{equation}
+
+Si $f(x)=0$ la ecuación es homogénea, en caso contrario es inhomogénea. Para determinar la solución general de cualquier EDL primero debemos resolver la EDL homogénea asociada, denominada complementaria.
+
+\begin{equation}
+    a_n(x) \frac{d^n y}{d x^n}+a_{n-1}(x) \frac{d^{n-1} y}{d x^{n-1}}+\cdots+a_1(x) \frac{d y}{d x}+a_0(x) y= 0
+\end{equation}
+
+\par En caso de que la ecuación fuera inhomogénea ($f(x)\neq 0$) la solución de la homogénea asociada es una parte de la solución, la solución general de la ecuación es:
+
+\begin{equation}
+    y(x) = y_c(x) + y_p(x)
+\end{equation}
+
+Donde $y_p(x)$ es una solución particular cualquiera de la EDL. Este método de resolución es válido para cualquier ED \underline{lineal}.
+
+\subsection{Independencia lineal de funciones y wronskiano}
+
+Para determinar la solución hay que encontrar $n$ funciones linealmente independientes que la satisfagan. La solución general viene dada por una superposición de esas $n$ funciones:
+
+\begin{equation}
+    y_{c}(x) = c_1y_1(x) + c_2y_2(x) + \cdots + c_ny_n(x)
+\end{equation}
+
+Una forma más fácil de comprobar la independencia lineal de $n$ funciones es calcular su wronskiano, calculando las sucesivas derivadas de las funciones:
+
+\begin{align}
+    \begin{split}
+        c_1y_1(x) + c_2y_2y(x) + \cdots + c_n y_n(x) &= 0
+        \\
+        c_1y_1'(x) + c_2y_2'(x) + \cdots + c_n y_n'(x) &= 0
+        \\  
+        & \;\;\vdots
+        \\
+        c_1y_1^{(n-1)}(x) + c_2y_2^{(n-1)}(x) + \cdots + c_n y_n^{(n-1)}(x) &= 0
+    \end{split}
+\end{align}
+
+Para comprobar que son LI calculamos su wronskiano para el intervalo [a,b] en el que las funciones $y_1,...,y_n$ están definidas:
+
+\begin{equation}
+    W(y_1,y_2,...,y_n) = \begin{vmatrix}
+        y_1 & y_2 & \cdots & y_n \\
+        y_1' & y_2' &  & \vdots \\
+        \vdots & & \ddots & \vdots \\
+        y_1^{(n-1)} & \cdots & \cdots & y_n^{(n-1)}
+    \end{vmatrix}
+\end{equation}
+
+Este determinante, el wronskiano tiene las siguientes propiedades relacionadas con la independencia lineal de funciones:
+
+\begin{itemize}
+    \item Si las funciones $y_1,...,y_n$ son LD $\Rightarrow$ se cumple que $W(x) = 0 \; \forall x \in [a,b]$. Que el wronskiano se anule en un intervalo dado no indica nada sobre la independencia o dependencia lineal de las funciones.
+    \item Si $\exists x \in [a,b] \vert W(x) \neq 0 \Rightarrow$ Las funciones son LI
+    \item Las funciones son LI y soluciones de la misma EDLH de orden n con coeficientes continuos en [a,b] $\Longleftrightarrow \; W(x) \neq 0 \; \forall x \in [a,b]$ 
+\end{itemize}
+
+Algunos ejemplos de esto serían:
+
+\begin{enumerate}
+    \item Las funciones $\sin(x)$ y $\cos(x)$ son LI y soluciones de la EDLH $y'' + 1 =0$. Su wronskiano es:
+    
+    \begin{equation}
+        W(x) = \begin{vmatrix}
+        \sin(x) & \cos(x)\\
+        \cos(x) & -\sin(x)    
+        \end{vmatrix} = -\sin^2(x) - \cos^2(x) = -1 \text{, distinto de cero } \forall x \in \mathbb{R}
+    \end{equation}
+
+    \item Las funciones $x$ y $e^x$ son LI pero no son solución de la misma EDLH de tercer orden con coeficientes continuos en todo $\mathbb{R}$, porque su wronskiano solo se anula en $x=1$:
+    \begin{equation}
+        W(x) = \begin{vmatrix}
+            x & e^x\\
+            1 & e^x   
+            \end{vmatrix} = (x-1)e^x
+    \end{equation}
+\end{enumerate}
+
+\subsection{Derivación de determinantes}
+
+Existe una técnica para derivar un determinante de funciones de forma rápida muy útil para derivar el wronskiano. Sea A un determinante cuyos elementos $a_{ij}$ son funciones:
+
+\begin{equation}
+    \begin{gathered}
+        \frac{d}{dx} A = \frac{d}{dx} \begin{vmatrix}
+            a_{11} & a_{12} & \cdots & a_{1n} \\
+            a_{21} & a_{22} & \cdots & a_{2n} \\
+            \vdots & \vdots & \ddots & \vdots \\
+            a_{n1} & a_{n2} & \cdots & a_{nn}
+        \end{vmatrix} = 
+        \begin{vmatrix}
+            a_{11}' & a_{12}' & \cdots & a_{1n}' \\
+            a_{21} & a_{22} & \cdots & a_{2n} \\
+            \vdots & \vdots & \ddots & \vdots \\
+            a_{n1} & a_{n2} & \cdots & a_{nn}
+        \end{vmatrix} + 
+        \\
+        \begin{vmatrix}
+            a_{11} & a_{12} & \cdots & a_{1n} \\
+            a_{21}' & a_{22}' & \cdots & a_{2n}' \\
+            \vdots & \vdots & \ddots & \vdots \\
+            a_{n1}' & a_{n2}' & \cdots & a_{nn}'
+        \end{vmatrix} + \cdots + 
+        \begin{vmatrix}
+            a_{11} & a_{12} & \cdots & a_{1n} \\
+            a_{21} & a_{22} & \cdots & a_{2n} \\
+            \vdots & \vdots & \ddots & \vdots \\
+            a_{n1}' & a_{n2}' & \cdots & a_{nn}'
+        \end{vmatrix}
+    \end{gathered}
+\end{equation}
+
+Si derivamos el wronskiano aplicando este método podemos ver que todos los determinantes menos uno se anulan, porque al derivar la fila i-ésima esa fila y la siguientes son iguales, por lo que ese determinante se anula. Se anulan todos menos el último determinante, por lo que la derivada del wronskiano es:
+
+\begin{equation}
+    \frac{d}{dx} W(x) =
+        \begin{vmatrix}
+            y_1 & y_2 & \cdots & y_{n-1} & y_n \\
+            y_1' & y_2' & \cdots & y_{n-1}' & \vdots \\
+            \vdots & \vdots & \ddots & \vdots & \vdots \\
+            y_1^{'(n-2)} & y_2^{'(n-2)} & \cdots & y_{n-1}^{'(n-2)} & y_n^{'(n-2)} \\
+            y_1^{'n} & y_2^{'n} & \cdots & y_{n-1}^{'n} & y_n^{'n}
+        \end{vmatrix}
+\end{equation}
+
+\subsection{Fórmula de Liouville}
+
+Sea {$y_i(x)$, i=1,...,n} un sistema fundamental de soluciones. Cualquier solución se puede obtener como combinación lineal de ellas, $y(x) = \sum_{i=1}^{n} c_i y_i(x)$. El wronskiano formado por todas ellas es igual a cero ya que y(x) depende linealmente de las $y_i(x)$:
+
+
+\begin{equation}
+    W(y_1,y_2,...,y_n,y) = \begin{vmatrix}
+        y_1 & \cdots & y_n & y \\
+        y_1' & \cdots & y_n' & y' \\
+        \cdots & \cdots & \cdots & \cdots \\
+        y_1^{'n} & \cdots & y_n^{'n} & y^{'n}
+    \end{vmatrix} = 0
+\end{equation}
+
+Si desarrollamos el determinante por la última columna obtenemos que:
+
+\begin{equation}
+    y^{'n} W(y_1,y_2,...,y_n) - y^{'n-1} 
+    \begin{vmatrix}
+        y_1 & \cdots & y_n & y \\
+        \cdots & \cdots & \cdots & \cdots \\
+        y_1^{'n-2} & \cdots & y_{n-1}^{'n-2} & y_n^{'n-2} \\
+        y_1^{'n} & \cdots & y_n^{'n} & y^{'n}
+    \end{vmatrix} + ... + y \begin{vmatrix}
+        y_1' & \cdots & y_n' \\
+        \vdots & \ddots & \vdots \\
+        y_1^{'n} & \cdots & y_n^{'n}
+    \end{vmatrix} = 0
+\end{equation}
+
+Como demostramos antes, el determinante que acompaña a la derivada de orden $n-1$ es la derivada del wronskiano. Por tanto, la ecuación anterior queda de la siguiente forma:
+
+\begin{equation}
+    y^{'n} W(y_1,y_2,...,y_n) - y^{'n-1} \frac{dW}{dx} + ... = 0
+\end{equation}
+
+Como el wronskiano es distinto de cero podemos poner la ED en forma normal:
+
+\begin{equation}
+    y^{'n} - y^{'n-1} \frac{1}{W(y_1,y_2,...,y_n)} \frac{dW}{dx} + ... = 0
+\end{equation}
+
+Esto implica que para una EDL homogénea de ecuación:
+
+\begin{equation}
+    y^{'n} + P_1(x) y^{'n-1} + ... + P_{n-1}(x)y' + P_n(x) y = 0
+\end{equation}
+
+El término que acompaña a la derivada de orden $n-1,\; P(x)$ se relaciona con el wronskiano de la siguiente forma:
+
+\begin{equation}
+    P_1(x) = - \frac{1}{W(y_1,y_2,...,y_n)} \frac{dW}{dx} 
+\end{equation}
+
+Si integramos a ambos lados de la ecuación obtenemos que:
+
+\begin{equation}
+    \log (W(y_1,y_2,...,y_n)) = - \int P_1(x) \,dx \Rightarrow \overbrace{W(y_1,y_2,...,y_n) = A e^{-\int P_1(x) \, dx}}^{\text{Fórmula de Liouville}}
+\end{equation}
+
+\subsection{Aplicación de la fórmula de Liouville}
+
+Esta expresión relaciona el wronskiano con los coeficientes de la ED y resulta especialmente útil para calcular la solución general de una EDLH de segundo orden conociendo una solución particular, como demostraremos a continuación. 
+
+\par Sea la EDLH de segundo orden arbitraria $y'' + P(x) y' + Q(x)y = 0$ y sea $y_1$ una solución particular la fórmula de Liouville dice que:
+
+\begin{equation}
+    W(x) = \begin{vmatrix}
+        y & y_1 \\
+        y' & y_1'
+    \end{vmatrix} = A e^{-\int P(x)\, dx} \Rightarrow yy_1'-y_1y' = A e^{-\int P(x)\, dx}
+\end{equation}
+
+Multiplicando por $y_1^{-2}$, para construir la derivada del cociente:
+
+\begin{equation}
+    \begin{gathered}
+    \frac{yy_1'-y_1y'}{-y_1^2} = \frac{A}{-y_1^2} e^{-\int P(x)\, dx} \Rightarrow \frac{d \left(\frac{y}{y_1}\right)}{dx} = \frac{A}{-y_1^2} e^{-\int P(x)\, dx} \\
+    \frac{y}{y_1} = \int \frac{A}{-y_1^2} e^{-\int P(x)\, dx} dx + K \Rightarrow y = Ky_1 + y_1\int \frac{A}{-y_1^2} e^{-\int P(x)\, dx} dx
+    \end{gathered}
+\end{equation}
+
+
+
+\section{EDL con coeficientes constantes}
+
+Una EDL con coeficientes constantes es de la forma:
+
+\begin{equation}
+    a_n \frac{d^n y}{d x^n}+a_{n-1} \frac{d^{n-1} y}{d x^{n-1}}+\cdots+a_1 \frac{d y}{d x}+a_0 y=f(x)
+\end{equation}
+
+Donde los valores $a_m$ son constantes arbitrarias.
+
+\subsection{Encontrar la solución de la ED homogénea asociada}
+
+Para calcular $y_c(x)$ debemos calcular el polinomio característico de la ED, haciendo la siguiente sustitución: $y= e^{\Lambda X}$. Si después de la sustitución dividimos toda la ecuación entre $e^{\lambda x}$ obtenemos el siguiente polinomio (P. característico):
+
+\begin{equation}
+    a_n\lambda^n + a_{n-1}^{n-1} + \cdots + a_1\lambda + a_0 = 0
+\end{equation}
+
+El siguiente paso será calcular las raíces del polinomio (Ruffini, fórmula,...), donde distinguiremos varios casos:
+
+\begin{itemize}
+    \item Todas las raíces reales y distintas: En este caso las soluciones son los $e^{mx}$ con $m=1,...,n$. La solución de la homogénea es:
+    \begin{equation}
+        y_c(x) = c_1e^{\lambda_1x} + c_2e^{\lambda_2 x} + \cdots + c_ne^{\lambda_nx}
+    \end{equation}
+
+    \item Raíces complejas: Buscamos soluciones reales, por lo que debemos jugar con las soluciones hasta obtener alguna solución real, normalmente usando identidades trigonométricas ($\cos(x),\sin(x)$). Siempre que aparece una solución compleja de la forma $\lambda_i = \alpha + i\beta$ aparece su conjugado como solución también ($\lambda_j=\alpha - i\beta$). La forma de obtener soluciones reales es combinarlas aprovechando la definición exponencial del seno y del coseno:
+
+    \begin{align}
+        \begin{split}
+            c_1e^{(\alpha + i\beta)x} + c_2e^{(\alpha - i\beta)x} &= e^{\alpha x}(d_1 \cos{\beta x} + d_2\sin{\beta x}) \\
+            &= Ae^{\alpha x} \begin{Bmatrix}
+                \sin \\
+                \cos
+            \end{Bmatrix} (\beta x + \phi)
+        \end{split}
+    \end{align}
+
+    Para una EDL de orden 2 la solución de la homogénea suele ser del tipo:
+
+    \begin{equation}
+        y_c(x) = A \cos(x) + B\sin(x)
+    \end{equation}
+
+    \item Raíces repetidas: Si $\lambda_i$ se repite $k$ veces, no tenemos $n$ ecuaciones LI, por lo que tenemos que buscar otras $k-1$ funciones para completar la familia de funciones LI. Esas soluciones que buscamos son de la forma:
+    \begin{equation}
+        x e^{\lambda_1 x}, x^2e^{\lambda_1x}, ... , x^{k-1}e^{\lambda_1x}
+    \end{equation}
+
+\end{itemize}
+
+
+Un ejemplo de una EDL para calcular su polinomio característico sería:
+
+\begin{equation}
+    y'' -2y'+y = e^x
+\end{equation}
+
+El PC y sus raíces serían:
+
+\begin{equation}
+    \lambda^2 -2\lambda + 1 = 0 \Rightarrow \lambda =1 \text{ Solución doble}
+\end{equation}
+
+Por tanto la solución de la ED homogénea asociada sería:
+
+\begin{equation}
+    y_c(x) = (c_1+c_2x)e^x
+\end{equation}
+
+
+\subsection{Calcular una solución particular $y_p$}
+
+\subsection{Método de variación de constantes}
+
+Este es el método más general y también más complicado (Hay que integrar y resolver sistemas de funciones). Si contamos con una solución de la homogénea de la forma:
+
+\begin{equation}
+    y_h = \sum_{i = 1}^{n} c_iy_i(x)
+\end{equation}
+
+Nuestra solución particular va a ser de la forma:
+
+\begin{equation}
+    y_p = \sum_{i = 1}^{n} c_i(x)y_i(x)
+\end{equation}
+
+Donde $y_{i}$ son las soluciones de la homogénea. Procedemos a derivar:
+
+\begin{equation}
+    \dot{y}_{p} = \sum_{i=1}^{n}\dot{c}_i(x)y_i + \sum_{i=1}^{n}c_i(x)\dot{y}_i
+\end{equation}
+
+Para calcular una solución particular vamos a imponer la siguiente condición:
+
+\begin{equation}
+    y_p^{'k} = \sum_{i=1}^{n-1} c_i(x)y_i^{'k}
+\end{equation}
+
+Esto implica que:
+
+\begin{equation}
+    \sum_{i=1}^{n} c_i'(x) y_i^{'k}= 0 \;\;\; k = 0,1,...,n-1
+\end{equation}
+
+A la derivada n-ésima le imponemos que verifique la ecuación diferencial:
+
+\begin{equation}
+    y_p^{'n}  = \sum_{i =1}^{n} [c_i(x)y_i^{'n} + c_i'(x)y_i^{'n-1}]
+\end{equation}
+
+Sustituimos $y_p$ y sus respectivas derivadas en la ED y obtenemos:
+
+\begin{equation}
+    \sum_{i = 1}^{n} [c_i(x)y_i^{'n} + c_i'(x)y_i^{'n-1}] + a_1(x) \sum_{i=1}^{n} [c_i(x)y_i^{'n-1}] + \cdots + a_0(x) \sum_{i=1}^{n} [c_i(x)y_i] = f(x)
+\end{equation}
+
+Reorganizando los sumatorios tenemos que:
+
+\begin{equation}
+    \sum_{i=1}^{n} c_i(x)[y_i^{'n} + a_1(x)y_i^{'n-1} + \cdots + a_0(x)y_i] + \sum_{i=1}^{n} c_i'(x)y_i^{'n-1} = f(x)
+\end{equation}
+
+Como cada $y_i$ es solución de la homogénea el primer sumatorio es nulo, entonces la n-ésima condición que se impone a las $c_i(x)$ es:
+
+\begin{equation}
+    \sum_{i=1}^{n} = c_i'(x)y_i^{'n-1} = f(x)
+\end{equation}
+
+Como tenemos n condiciones podemos plantear un sistema de n ecuaciones y n incógnitas ($c_i(x)$) para calcular los coeficientes.
+
+\par Por último, debemos notar que estas condiciones nacen de tratar con la ED en forma normal, por lo que si no está normalizada tenemos que dividir todo por el término que acompaña a $y^{'n}$
+
+
+\subsection{Método de los coeficientes indeterminados}
+
+Es un caso particular del método anterior y solo se puede aplicar cuando:
+
+\begin{enumerate}
+    \item La EDLH asociada es una EDL de coeficientes constantes
+    \item La función $f(x)$ se puede poner como combinación de productos de polinomios por exponenciales y senos o cosenos (Se pueden poner en forma exponencial):
+    \begin{equation}
+        a_0y^{'n} + a_1y^{'n-1} + \cdots + a_{n-1}y' + a_ny = P_s(x) e^{px} 
+    \end{equation}
+\end{enumerate}
+
+Donde $P_s(x)$ es un polinomio de grado s. En este caso es muy sencillo encontrar una solución particular, tedrá la siguiente forma:
+
+\begin{equation}
+    y_p = e^{ax} x^n (B_0x^s + ... + B_s)
+\end{equation}
+
+Donde $p$ es el coeficiente de la exponencial y $n$ es la multplicidad del 0 en el polinomio característico. El procedimiento va a ser igualar el polinomio término a término para sacar los valores de $B_i$ con $i=0,...,s$. El término $x^n$ aparece porque la solución de una EDL con coeficientes constantes de este tipo tiene que contar con un polinomio de grado $s$ al menos. Si $f(x)$ es un polinomio entonces es un caso particular de lo anterior con $p=0$.
+
+\par Si $\mathcal{L}(y) = f_1(x) + f_2(x)$ podemos encontrar una solución particular aplicando el principio de superposición:
+
+\begin{equation}
+    y_p = y_1 + y_2
+\end{equation}
+
+Donde $y_1$ es la solución particular de $\mathcal{L}(y) = f_1(x)$ y $y_2$ es la solución particular de $\mathcal{L}(y) = f_2(x)$.
+
+\section{Ecuaciones de Cauchy-Euler}
+
+La característica más importante de estas ecuaciones es que son equidimensionales, el orden de la derivada coincide con la potencia del coeficiente que la acompaña. Son de la forma:
+
+\begin{equation}
+    x^n y^{'n} + a_1x^{n-1} y^{'n-1} + a_2 x^{n-2}y^{'n-2} + ...+ a_{n-1}xy' +a_ny = f(x)
+\end{equation}
+
+Se resuelven con el cambio de variable $\mathbf{x =e^t}$, que la transforma en una EDL con coeficientes constantes. De esta forma cambiamos la variable independiente y obtenemos funciones $y(t)$ que dependen de t y no de x. Para calcular las derivadas sucesivas vamos a aplicar la regla de la cadena, que va a relacionar las derivadas de y con respecto a x con las derivadas respecto a t. Hay que tener encuenta que $t=\log x$:
+
+\begin{equation}
+    \begin{gathered}
+        \frac{dy}{dx} = \frac{dy}{dt} \frac{dt}{dx} = \frac{1}{x} \frac{dy}{dt} = e^{-t} \frac{dy}{dt} \\
+        \frac{d^2 y}{d x^2}=\frac{d}{d x}\left(\frac{d y}{d x}\right)=\frac{d}{d x}\left(e^{-t} \frac{d y}{d t}\right)=\frac{d}{d t}\left(e^{-t} \frac{d y}{d t}\right) \frac{d t}{d x}=\left(-e^{-t} \frac{d y}{d t}+e^{-t} \frac{d^2 y}{d t^2}\right) e^{-t} \Rightarrow \\ \Rightarrow \frac{d^2y}{dx^2}e^{-2 t}\left(-\frac{d y}{d t}+\frac{d^2 y}{d t^2}\right)
+    \end{gathered}
+\end{equation}
+
+Generalizando para derivadas de orden n la expresión tiene la siguiente forma:
+
+\begin{equation}
+    \frac{d^ny}{dt^n} = e^{-nt} \sum_{j=1}^{n} b_j \frac{d^jy}{dt^j} \; \; b_j \in \mathbb{R}
+\end{equation}
+
+Considerando que $x^k = e^{kt}$ los términos exponenciales se cancelan al sustituir todo en la ED y realizar los productos:
+
+\begin{equation}
+    x^k \frac{d^k y}{dx^k} = e^{kt} e^{-kt} \sum_{j=1}^{k} b_j \frac{d^j y}{dt^j} = \sum_{j=1}^{k} b_j \frac{d^j y}{dt^j}
+\end{equation}
+
+De esta forma una EDL con coeficientes constantes en función de $t$ e $y(t)$. Una vez calculada la solución hay que deshacer el cambio de variable.
+
+\subsection{Ecuaciones convertibles en ecuaciones de Cauchy-Euler}
+
+Son de la forma:
+
+\begin{equation}
+    (\alpha x + \beta)^n y^{'n} + a_1(\alpha x + \beta)^{'n-1}y^{'n-1} + ... + a_{n-1}(\alpha x + \beta)y' + a_ny = f(x) \;\; \alpha , \beta, a_i \in \mathbb R
+\end{equation}
+
+El cambio de variable que vamos a realizar va a ser $\mathbf{z = \alpha x + \beta}$, que va a transformar la ecuación en una de Euler con $z$ como variable independiente y $y(z)$ como variable dependiente.
+
+\par Aplicando la regla de la cadena podemos calcular las derivadas de $y$ con respecto a $x$ en función de las derivadas de $y$ con respecto a $z$:
+
+\begin{equation}
+    \begin{gathered}
+        \frac{dy}{dx} = \frac{dy}{dz} \frac{dz}{dx} = \alpha \frac{dy}{dz} \\
+        \frac{d^2y}{dx^2} = \frac{d}{dx} (\alpha \frac{dy}{dz}) = \alpha^2 \frac{d^2 y}{dz^2}
+    \end{gathered}
+\end{equation}
+
+Por tanto, la expresión general de la derivada n-ésima es :
+
+\begin{equation}
+    \frac{d^n y}{dx^n} = \alpha^n \frac{d^n y}{dz^n}
+\end{equation}
+
+Sustituyendo en la ED original obtenemos esta EDL de Euler en función de $z$ y $y(z)$:
+
+\begin{equation}
+    (\alpha z)^n y^{'n}(z) + a_1(\alpha z)^{'n-1}y^{'n-1}(z) + ... + a_{n-1}(\alpha z)y'(z) + a_ny(z) = f(z)
+\end{equation}
+
+Esta ecuación se puede transformar en una EDL con coeficientes constantes con el cambio de variable $\mathbf{z = e^t}$.
+
+\section{Sistemas de EDL}
+
+Un sistema de EDL con dos incógnitas ($x$ e $y$) que dependen de t tiene la siguiente forma:
+
+\begin{equation}
+    \left\{ \begin{array}{l}
+        L_{11}(y) + L_{12}(x) = f_1(t) \\
+        L_{21}(y) + L_{22}(x) = f_2(t)
+    \end{array}
+    \right.
+\end{equation}
+
+Para resolverlo usaremos las derivadas con la notación operacional ($Dx = \frac{dx}{dt}$ y $Dy = \frac{dy}{dt}$) y obtendremos las funciones $x$ e $y$ mediante integración. Para entenderlo vamos a resolver un ejemplo:
+
+\begin{equation}
+    \left\{ \begin{array}{l}
+        2Dx + Dy -4x - y = e^t \\
+        Dx + 3x + y = 0
+    \end{array}
+    \right.
+\end{equation}
+
+En primer lugar, agrupamos las dependencias en $x$ y en $y$, sacando factor común como si fueran factores algebraicos:
+
+\begin{equation}
+    \begin{gathered}
+        \left\{ \begin{array}{l}
+            (2D -4)x + (D-1)y = e^t\\
+            (D +3)x + y = 0
+        \end{array}
+        \right. \overbrace{\Rightarrow}^{(D-1)Ec\text{.}2} 
+        \left\{ \begin{array}{l}
+            (2D -4)x + (D-1)y = e^t\\
+            (D +3)(D-1)x + (D-1)y = 0
+        \end{array}
+        \right. \Rightarrow \\
+        \Rightarrow \left\{ \begin{array}{l}
+            (2D -4)x + (D-1)y = e^t\\
+            (D^2 +2D - 3)x + (D-1)y = 0
+        \end{array}
+        \right. \overbrace{\Rightarrow}^{Ec\text{.}1-Ec\text{.}2} (-D^2-1)x=e^t
+    \end{gathered}
+\end{equation}
+
+A partir de esta expresión ya contamos con una EDL inhomogénea con coeficientes constantes que ya sabemos resolver:
+
+\begin{equation}
+    (-\frac{d^2x}{dt^2} - x) = e^t
+\end{equation}
+
+La solución de la homogénea asociada es $x_H = c_1\sin t + c_2 \cos t$. Por otro lado, la solución particular de la EDL es $x_P = - \frac{e^t}{2}$ Por tanto, la solución general es:
+
+\begin{equation}
+    x(t) = x_H + x_P = c_1 \sin t + c_2 \cos t - \frac{e^t}{2}
+\end{equation}
+
+Ahora tenemos que volver al sistema original y sustituir $x(t)$ en la otra ecuación para calcular la otra función (Hay que tener cuidado de no sustituir $x(t)$ en la misma ecuación de la que lo sacamos, si no podemos obtener $0=0$):
+
+\begin{equation}
+    \begin{gathered}
+        \frac{dx}{dt} + 3x + y =0  \\
+        \frac{d}{dt}(c_1 \sin t + c_2 \cos t - \frac{e^t}{2})+ 3(c_1 \sin t + c_2 \cos t - \frac{e^t}{2})
+    \end{gathered}
+\end{equation}
+
+Resolvemos esta ecuación, que ni siquiera es diferencial y despejamos $y(t)$:
+
+\begin{equation}
+    y(t) = (c_2 - 3c_1)\sin t - (c_1+3c_2)\cos t +2e^t
+\end{equation}
+
+Por lo que la solución es:
+
+\begin{equation}
+    \left\{ \begin{array}{l}
+        x(t) = c_1 \sin t + c_2 \cos t - \frac{e^t}{2} \\
+        y(t) = (c_2 - 3c_1)\sin t - (c_1+3c_2)\cos t +2e^t
+    \end{array}
+    \right.
+\end{equation}
+
+Por último, debemos saber el número de constantes de la solución, que es igual al grado o orden del determinante de coeficientes:
+
+\begin{equation}
+    \begin{vmatrix}
+        (2D - 4 ) & (D-1) \\
+        (D+3) & 1
+    \end{vmatrix} = -D^2 - 1 \Rightarrow \text{Derivada de orden 2, la solución tiene dos constantes}
+\end{equation}
+
+Este procedimiento es útil realizarlo antes de empezar a trabajar con el sistema, para saber de antemano con cuantas constantes debe quedar nuestra solución. Si el orden del determinante es menor que el número de constantes obtenidas es que las constantes están ligadas de alguna forma. En cambio, si el grado es mayor que el número de constantes es que algo está mal en la resolución de nuestro sistema. Para resolver sistemas de ecuaciones con más incógnitas y de mayor orden podemos usar el método de Gauss, Cramer o cualquier método que resuelva el sistema.
+
+\section{Anexo: Notaciones}
+
+\begin{itemize}
+    \item Notación diferencial: \newline
+    \begin{equation}
+        a_n(x) \frac{d^n y}{d x^n}+a_{n-1}(x) \frac{d^{n-1} y}{d x^{n-1}}+\cdots+a_1(x) \frac{d y}{d x}+a_0(x) y=f(x)
+    \end{equation}
+
+    \item Notación derivadas: \newline
+    \begin{equation}
+        a_0y^{'n} + a_1y^{'n-1} + \cdots + a_{n-1}y' + a_ny = f(x)
+    \end{equation}
+
+    \item Notación operacional expresando las derivadas como un operacional, $y' = D(y) = Dy$. Para órdenes superiores la notación sería $y''' = D(D(D(y))) = D(D^2(y)) = D^3y$ : \newline
+    \begin{equation}
+        a_n D^ny + a_{n-1} D^{n-1}y + \cdots + a_1 Dy = f(x)
+    \end{equation}
+\end{itemize}
+
+
+\end{document}
